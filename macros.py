@@ -72,7 +72,7 @@ def outer():
     inner()
     inner()
 
-@with_macros(debug=True)
+@with_macros()
 def test_it_nested():
     outer()
 
