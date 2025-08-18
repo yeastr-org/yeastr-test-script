@@ -28,7 +28,7 @@ def inputs():
 inputs = inputs()
 match_game.input = lambda _: next(inputs)
 
-exec(compile(match_game.play.__source__, 'match_game_play.py', 'exec'), match_game.__dict__)
+exec(compile(match_game.play._source, 'match_game_play.py', 'exec'), match_game.__dict__)
 match_game.play()
 print('GAME OVER')
 match_game.play()
