@@ -85,3 +85,58 @@ test_it_nested()
 #def my_m():
 #    print('okay')
 #my_m()
+
+
+# so you want expression macros?
+# mhh.. why?
+# let's try shortening some code
+import ast
+@def_macro(expr=True, mLang=True)
+def a_cmp(left, ops, comparators):
+    """ast.Compare: usually you cmp just 2 objs"""
+    with mIf(
+        isinstance(ops, ast.List)
+        and isinstance(comparators, ast.List)
+    ):
+        # keep the default behaviours
+        ast.Compare(
+            left=left,
+            ops=ops,
+            comparators=comparators,
+        )
+    with mIf(not isinstance(ops, ast.List)):
+        # if ops is not a list, it means
+        # comparators is not a list either
+        ast.Compare(
+            left=left,
+            ops=[ops],
+            comparators=[comparators],
+        )
+
+@with_macros()
+def test_expr_macro():
+    print(ast.dump(
+        a_cmp(
+            ast.Name('subj', ctx=ast.Load()),
+            ast.Eq(),
+            ast.Constant(3)
+        )
+    ))
+test_expr_macro()
+# Compare(left=Name(id='subj', ctx=ast.Load()), ops=[Eq()], comparators=[Constant(value=3)])
+# awesome... ofc, this means after mLang, there must be only 1 expression left.
+# as you can see, you can use positional arguments,
+# and they can be whatever you want, won't get converted..
+# TODO: check they actually don't get converted
+# no new names are bound, just literal substitution.
+
+# an expr macro without mLang raises a TransformError
+# when more than one expression is used
+# ... it's AssertionError...
+try:
+    @def_macro(expr=True)
+    def wrong():
+        exp1
+        exp2
+except AssertionError as exc:
+    print(str(exc))
