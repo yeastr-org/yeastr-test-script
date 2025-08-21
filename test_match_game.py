@@ -25,13 +25,16 @@ def inputs():
     yield 'press s'
     yield 'quit'
 
+    yield 'clickm 3 5 r'
+    yield 'clickd 3 5'
+    yield 'quit'
+
+
 inputs = inputs()
 match_game.input = lambda _: next(inputs)
 
 exec(compile(match_game.play._source, 'match_game_play.py', 'exec'), match_game.__dict__)
-match_game.play()
-print('GAME OVER')
-match_game.play()
-print('GAME OVER')
-match_game.play()
-print('GAME OVER')
+
+for _ in range(4):
+    match_game.play()
+    print('GAME OVER')

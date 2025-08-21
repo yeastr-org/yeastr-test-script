@@ -1,6 +1,8 @@
 from yeastr.bootstrapped import *
 from yeastr.backport_match import backport_match
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
 
 @backport_match()
 def test_mapping():
@@ -10,6 +12,7 @@ def test_mapping():
         {"sleep": "1s"},
         {"sound": "file:///path.oga", "format": "ogg"},
         {"sound": "file:///path.mp9", "format": "mp9"},
+        {"error": "msg", "location": (3, 4), "subsystem": "some"},
     ]
     for action in actions:
         match action:
@@ -22,6 +25,8 @@ def test_mapping():
                 print(f'ui.play({url})')
             case {"sound": _, "format": _}:
                 print('warning("Unsupported audio format")')
+            case {"error": msg, **rest}:
+                print(msg, rest)
 test_mapping()
 
 class Room(ABC):
@@ -119,6 +124,17 @@ class Click:
     def __init__(self, position):
         self.position = position
 
+@dataclass
+class ClickDc:
+    position: tuple  # tuple[str, str]
+    kind: str = 'Right'
+
+class ClickMatchable:
+    __match_args__ = ('position', 'kind')
+    def __init__(self, position, kind):
+        self.position = position
+        self.kind = kind
+
 class KeyPress:
     def __init__(self, kn):
         self.key_name = kn
@@ -163,6 +179,10 @@ def play():
             case ["click", x, y] if 'PC' in character.objects:
                 print('emulating click', x, y)
                 event.set(Click(position=(x, y)))
+            case ["clickd", x, y]:
+                event.set(ClickDc((x, y)))
+            case ["clickm", *pos, k]:
+                event.set(ClickMatchable(pos, k))
             case ["press", key_name] if 'PC' in character.objects:
                 print('emulating keypress', key_name)
                 event.set(KeyPress(key_name))
@@ -172,6 +192,10 @@ def play():
         match event.get():
             case Click(position=(x, y)):
                 print(f'You definitly clicked {x=} {y=}')
+            case ClickDc((x, y), kind):
+                print(f'clicked (dataclass) {kind=} {x=} {y=}')
+            case ClickMatchable((x, y), kind):
+                print(f'clicked (__match_args__) {kind=} {x=} {y=}')
             case KeyPress(key_name="Q") | KeyPress(key_name="q"):
                 mainloop.Break
             case KeyPress(key_name="up_arrow"):
