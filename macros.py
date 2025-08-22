@@ -140,3 +140,5 @@ try:
         exp2
 except AssertionError as exc:
     print(str(exc))
+
+# I don't see a reason for bijection example for JIT
