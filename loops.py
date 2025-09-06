@@ -62,7 +62,7 @@ def asd():
     with For(range(10)) as outer:
         if outer.i == 0:
             print('continuiing, not to trigger inner.orelse the first time')
-            outer.Continue()
+            outer.Continue
         with For(range(outer.it)) as inner:
             print(outer.i, outer.it, inner.i, inner.it)
             if inner.item == 2:
