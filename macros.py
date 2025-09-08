@@ -1,4 +1,5 @@
-from yeastr.bootstrapped import def_macro, with_macros
+from yeastr.bootstrapped import def_macro
+from yeastr.as_decorator import with_macros
 
 
 @def_macro(hygienic=False)

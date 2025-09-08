@@ -1,5 +1,5 @@
 from yeastr.bootstrapped import *
-from yeastr.backport_match import backport_match
+from yeastr.as_decorator import backport_match, with_functional, with_foreach
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 

@@ -1,4 +1,5 @@
-from yeastr.bootstrapped import with_functional, TransformError
+from yeastr.bootstrapped import TransformError
+from yeastr.as_decorator import with_functional
 from sys import version_info
 
 @with_functional(debug=True)

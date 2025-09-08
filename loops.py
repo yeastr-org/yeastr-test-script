@@ -3,7 +3,8 @@
 # the usual (i, it) with enumerate only
 # then i came up with `with For...`
 
-from yeastr.bootstrapped import with_foreach, Break
+from yeastr.bootstrapped import Break
+from yeastr.as_decorator import with_foreach
 
 # -------------------- EXAMPLE 1
 # from textwrap (stdlib)
