@@ -1,15 +1,15 @@
 from yeastr.bootstrapped import TransformError
-from yeastr.as_decorator import with_functional
+from yeastr.as_decorator import with_call2comp
 from sys import version_info
 
-@with_functional(debug=True)
+@with_call2comp(debug=True)
 def something():
     print(emap(lambda x: x + 1, range(10)))
     print(efilter(lambda x: x > 4, range(10)))
 
 something()
 
-@with_functional(debug=True)
+@with_call2comp(debug=True)
 def something_more():
     d = {'a': 'A', 'b': 'B'}
     print(emap(lambda k, v: k + v, d.items()))
@@ -32,7 +32,7 @@ def something_more():
 
 something_more()
 
-@with_functional(debug=True)
+@with_call2comp(debug=True)
 def something_exaustive():
     d = {'a': 'A', 'b': 'B'}
     try:
@@ -44,7 +44,7 @@ def something_exaustive():
 something_exaustive()
 
 try:
-    @with_functional(debug=True)
+    @with_call2comp(debug=True)
     def something_tricky():
         try:
             print(emapd((bound := lambda k, v: {k*2: v*2}), d.items()))
@@ -55,7 +55,7 @@ except TransformError as exc:
     print('you should never need to expect a TransformError')
 
 
-@with_functional(debug=True)
+@with_call2comp(debug=True)
 def some_filtering():
     d = {'a': 'A', 'b': 'B'}
     print(efilter((bound := lambda kv: kv[0].startswith('a')), d.items()))
@@ -66,7 +66,7 @@ def some_filtering():
 some_filtering()
 
 try:
-    @with_functional(debug=True)
+    @with_call2comp(debug=True)
     def some_filtering():
         d = {'a': 'A', 'b': 'B'}
         print(efiltermapd(lambda k, v: k == 'a', (_map := lambda k, v: (k*2, v*2)), d.items()))
@@ -74,7 +74,7 @@ except TransformError as exc:
     print(str(exc))
     print('you should never need to expect a TransformError')
 
-@with_functional(debug=True)
+@with_call2comp(debug=True)
 def some_filtering():
     d = {'a': 'A', 'b': 'B'}
     def _map(k, v): return (k*2, v*2)
@@ -84,7 +84,7 @@ def some_filtering():
                       performance_required=False))
 some_filtering()
 
-@with_functional(debug=True)
+@with_call2comp(debug=True)
 def fix_unfixable():
     d = {'a': 'A', 'b': 'B'}
     print(emap((bound := lambda k, v: k + v), d.items(),

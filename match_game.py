@@ -1,5 +1,5 @@
 from yeastr.bootstrapped import *
-from yeastr.as_decorator import backport_match, with_functional, with_foreach
+from yeastr.as_decorator import backport_match, with_call2comp, with_foreach
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
@@ -34,7 +34,7 @@ class Room(ABC):
     #objects = []
     #directions = {}
 
-    @with_functional()
+    @with_call2comp()
     def describe(self):
         print('Room:', self.name)
         print('Objects:', ', '.join(self.objects))
