@@ -1,5 +1,5 @@
 from yeastr.bootstrapped import *
-from yeastr.as_decorator import backport_match, with_call2comp, with_foreach
+from yeastr.as_decorator import backport_match, with_call2comp, with_namedloops
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
@@ -141,7 +141,7 @@ class KeyPress:
 
 
 @backport_match(custom_globals=globals(), debug=True)
-@with_foreach()
+@with_namedloops()
 def play():
     character = Character()
     reset_rooms()

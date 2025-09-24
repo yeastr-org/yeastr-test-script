@@ -1,10 +1,5 @@
-# It is called with_foreach because originally I had numerical break
-# and wanted `for each in something:` syntax, to optionally bind
-# the usual (i, it) with enumerate only
-# then i came up with `with For...`
-
 from yeastr.bootstrapped import Break
-from yeastr.as_decorator import with_foreach
+from yeastr.as_decorator import with_namedloops
 
 # -------------------- EXAMPLE 1
 # from textwrap (stdlib)
@@ -26,7 +21,7 @@ from yeastr.as_decorator import with_foreach
 #        else:
 #            i += 1
 
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def _fix_sentence_endings(self, chunks):
     # recompute_end=False, since we would get IndexError
     # before we could change the chunks size, the end is thus len-1
@@ -40,7 +35,7 @@ _fix_sentence_endings(None, the_chunks)
 assert the_chunks[2] == '  ', "didn't work"
 
 # still looks bad, let's improve:
-#@with_foreach(debug=True)
+#@with_namedloops(debug=True)
 #def _fix_sentence_endings(self, chunks):
 #    patsearch = self.sentence_end_re.search
 #    with For(chunks, indexed=True, recompute_end=False) as loop:
@@ -58,7 +53,7 @@ assert the_chunks[2] == '  ', "didn't work"
 print()
 # -------------------- EXAMPLE 2
 # Autistic Spectrum Demo
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def asd():
     with For(range(10)) as outer:
         if outer.i == 0:
@@ -82,7 +77,7 @@ print()
 # You can raise a Break to jump
 # (and try-else to run unless jumped)
 # Now you need to disable strict on the loops that should allow it
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def jump_allowed():
     with For([True, False]) as what:
         try:
@@ -104,7 +99,7 @@ jump_allowed()
 print()
 # -------------------- EXAMPLE 4
 # You can forbid jumps
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def jump_disallow_wrong_attempt():
     with For(range(3)) as loop:
         raise Break('jump')
@@ -113,7 +108,7 @@ try:
 except Break:
     print('this is impossible to catch, as there is no handler')
 
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def jump_disallowed():
     try:
         with For(range(3)) as loop:
@@ -127,7 +122,7 @@ jump_disallowed()
 
 # -------------------- EXAMPLE 5
 # actually a test for a bug...
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def test_break_without_if():
     with While(True) as again:
         again.Break
@@ -136,7 +131,7 @@ test_break_without_if()
 
 # -------------------- EXAMPLE 6
 # You can bind names in the usual way
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def name_bind():
     with For(chunk in ['asd', 'qwe']) as chunkloop:
         with For(ch in chunk) as charloop:
@@ -147,7 +142,7 @@ name_bind()
 
 # -------------------- EXAMPLE 7
 # Properly explain the name binding behaviour with indexed=True
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def name_bind_indexed():
     #from time import perf_counter
     perf_times = 5
@@ -173,7 +168,7 @@ name_bind_indexed()
 
 # -------------------- EXAMPLE 8
 # For should not enumerate unless needed
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def non_enumerating():
     with For(c in 'asd') as chloop:  # do enumerate
         print(c.upper())
@@ -183,8 +178,23 @@ def non_enumerating():
 non_enumerating()
 
 # -------------------- EXAMPLE 9
-@with_foreach(debug=True)
+@with_namedloops(debug=True)
 def also_unpack():
     with For((x, y) in [(0, 0), (1, 0), (2, 1)]) as pointsloop:
         print(x, y)
 also_unpack()
+
+# -------------------- EXAMPLE 10
+# we have orempty :D
+@with_namedloops(debug=True)
+def orempty():
+    with For(range(10)) as full:
+        ...
+    with full.orempty:
+        assert False, 'FAILED'
+
+    with For(range(0)) as nonfull:
+        ...
+    with nonfull.orempty:
+        print('EMPTY')
+orempty()
