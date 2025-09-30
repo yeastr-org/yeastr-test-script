@@ -77,48 +77,10 @@ print()
 # You can raise a Break to jump
 # (and try-else to run unless jumped)
 # Now you need to disable strict on the loops that should allow it
-@with_namedloops(debug=True)
-def jump_allowed():
-    with For([True, False]) as what:
-        try:
-            with While(True, strict=False) as infinite:
-                with While(True) as infinite2:
-                    if what.it:
-                        infinite.Break
-                    else:
-                        raise Break('jump')
-        except Break as exc:
-            if exc.n == 'jump':
-                print('yep u jumped here')
-        else:
-            print('infinite loop stopped')
-        print('then...')
-jump_allowed()
-
-
-print()
+# REDACTED
 # -------------------- EXAMPLE 4
 # You can forbid jumps
-@with_namedloops(debug=True)
-def jump_disallow_wrong_attempt():
-    with For(range(3)) as loop:
-        raise Break('jump')
-try:
-    jump_disallow_wrong_attempt()
-except Break:
-    print('this is impossible to catch, as there is no handler')
-
-@with_namedloops(debug=True)
-def jump_disallowed():
-    try:
-        with For(range(3)) as loop:
-            if False:
-                loop.Break
-            raise Break('jump')
-    except TransformError:  # aaand, that's at runtime
-        print('you disallowed it')
-
-jump_disallowed()
+# REDACTED
 
 # -------------------- EXAMPLE 5
 # actually a test for a bug...
