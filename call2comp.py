@@ -1,5 +1,5 @@
-from yeastr.bootstrapped import TransformError
-from yeastr.as_decorator import with_call2comp
+# ye pls do star import of yeastr
+from yeastr.as_decorator import with_call2comp, TransformError, random_string
 from sys import version_info
 
 @with_call2comp(debug=True)

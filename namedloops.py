@@ -1,4 +1,3 @@
-from yeastr.bootstrapped import Break
 from yeastr.as_decorator import with_namedloops
 
 # -------------------- EXAMPLE 1
