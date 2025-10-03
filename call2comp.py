@@ -1,5 +1,6 @@
 # ye pls do star import of yeastr
-from yeastr.as_decorator import with_call2comp, TransformError, random_string
+from yeastr.as_decorator import with_call2comp, TransformError, random_string,\
+    backport_dict_ops
 from sys import version_info
 
 @with_call2comp(debug=True)
@@ -9,17 +10,17 @@ def something():
 
 something()
 
+@backport_dict_ops(debug=True)
 @with_call2comp(debug=True)
 def something_more():
-    d = {'a': 'A', 'b': 'B'}
+    d: dict = {'a': 'A', 'b': 'B'}
     print(emap(lambda k, v: k + v, d.items()))
     print(efilter(lambda k, v: v == 'B', d.items()))
     print(emapd(lambda k, v: (k*2, v*2), d.items()))
-    if version_info >= (3, 11):
-        print(efilterd(
-            lambda k, v: k.startswith('b'),
-            (d | emapd(lambda k, v: (k*2, v*2), d.items())).items()
-        ))
+    print(efilterd(
+        lambda k, v: k.startswith('b'),
+        (d | emapd(lambda k, v: (k*2, v*2), d.items())).items()
+    ))
     print(emapd(lambda k: (k, k*2), d.keys()))
     print(efilters(lambda v: v > 2, [0, 1, 2, 3, 4]))
     print(efiltermap(lambda v: v > 2, lambda v: v + 3, [0, 2, 3, 4, 5, 6, 7]))
@@ -30,7 +31,13 @@ def something_more():
         {'aa': 'AA', 'bb': 'BB', 'aaa': 'AAA'}.items()
     ))
 
-something_more()
+if version_info > (3, 9):
+    something_more()
+    with open(__file__.replace('call2comp.py', '_call2comp_something_more.py'), 'w') as backported:
+        backported.write(something_more._source)
+else:
+    from _call2comp_something_more import something_more
+    something_more()
 
 @with_call2comp(debug=True)
 def something_exaustive():
